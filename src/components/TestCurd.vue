@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
-import newDialog from "./newDialog.vue";
+import NewDialog from "./NewDialog.vue";
 import AddForm from "./AddForm.vue";
+import EditForm from "./EditForm.vue";
 
 type DataType = {
   id: string;
@@ -25,6 +26,11 @@ const getData = () => {
       name: "Tom",
       email: "Tom@example.com",
     },
+    {
+      id: generateID(),
+      name: "Amy",
+      email: "Amy@example.com",
+    },
   ];
 
   tableData.value = data;
@@ -34,7 +40,7 @@ const postData = async (user: DataType) => {
   tableData.value.push(user);
 };
 
-const putData = (id: string) => {
+const findEditUser = (id: string) => {
   const user = tableData.value.find((user) => user.id === id);
   tempUser.value = user;
 };
@@ -44,9 +50,11 @@ const addUser = (value: Omit<DataType, "id">): void => {
   handleCloseDialog();
 };
 
-// const editUser = () => {
-//   console.log("edit");
-// };
+const editUser = (value: DataType) => {
+  const userIndex = tableData.value.findIndex((user) => user.id === value.id);
+  tableData.value[userIndex] = value;
+  handleCloseDialog();
+};
 
 const deleteUser = (id: string, name: string) => {
   ElMessageBox.confirm(`即將要刪除使用者${name}資料，是否繼續?`, "Warning", {
@@ -87,32 +95,47 @@ onMounted(() => {
     <el-table-column prop="email" label="Email" width="180" />
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default="scope">
-        <el-button
+        <!-- <el-button
           link
           type="primary"
           size="small"
           @click="putData(scope.row.id)"
         >
           編輯
-        </el-button>
+        </el-button> -->
+        <div class="flex">
+          <NewDialog
+            title="編輯"
+            :closeMsg="closeMsg"
+            :linkType="true"
+            :delay="true"
+            @click="findEditUser(scope.row.id)"
+          >
+            <EditForm :user="tempUser" @editUser="editUser" />
+          </NewDialog>
 
-        <el-button
-          link
-          type="danger"
-          size="small"
-          @click="deleteUser(scope.row.id, scope.row.name)"
-          >刪除</el-button
-        >
+          <el-button
+            link
+            type="danger"
+            size="small"
+            @click="deleteUser(scope.row.id, scope.row.name)"
+            >刪除</el-button
+          >
+        </div>
       </template>
     </el-table-column>
   </el-table>
-  <newDialog title="新增使用者資料" :closeMsg="closeMsg">
+  <NewDialog title="新增使用者資料" :closeMsg="closeMsg">
     <AddForm @addUser="addUser" />
-  </newDialog>
+  </NewDialog>
 </template>
 
 <style scoped>
 .mb-4 {
   margin-bottom: 1rem;
+}
+
+.flex {
+  display: flex;
 }
 </style>

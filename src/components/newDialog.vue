@@ -4,12 +4,20 @@ import { ref, watch } from "vue";
 const props = defineProps<{
   title: string;
   closeMsg: boolean;
+  linkType?: boolean;
+  delay?: boolean;
 }>();
 
 const dialogVisible = ref(false);
 
 const openDialog = () => {
-  dialogVisible.value = true;
+  if (!props.delay) {
+    dialogVisible.value = true;
+  } else {
+    setTimeout(() => {
+      dialogVisible.value = true;
+    }, 100);
+  }
 };
 
 const closeDialog = () => {
@@ -27,7 +35,9 @@ watch(
 
 <template>
   <div>
-    <el-button @click="openDialog">{{ title }}</el-button>
+    <el-button @click="openDialog" :link="linkType" type="primary">{{
+      title
+    }}</el-button>
     <el-dialog v-model="dialogVisible"> <slot /> </el-dialog>
   </div>
 </template>

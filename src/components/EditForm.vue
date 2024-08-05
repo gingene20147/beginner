@@ -7,16 +7,21 @@ type RuleForm = {
   email: string;
 };
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+const props = defineProps<{ user: User }>();
+
 const emit = defineEmits<{
-  (e: "AddUser", value: { name: string; email: string }): void;
+  (e: "editUser", value: { id: string; name: string; email: string }): void;
 }>();
 
 const ruleFormRef = ref<FormInstance>();
 
-const ruleForm = reactive({
-  name: "",
-  email: "",
-});
+const ruleForm = reactive({ ...props.user });
 
 const rules = reactive<FormRules<RuleForm>>({
   name: [
@@ -37,9 +42,8 @@ const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   formEl.validate((valid) => {
     if (valid) {
-      console.log("submit!");
-      emit("AddUser", ruleForm);
-      resetForm(ruleFormRef.value);
+      // console.log(ruleForm);
+      emit("editUser", ruleForm);
     } else {
       console.log("error submit!");
     }
@@ -71,7 +75,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
     <el-form-item>
       <el-button type="primary" @click="submitForm(ruleFormRef)">
-        新增
+        修改
       </el-button>
 
       <el-button @click="resetForm(ruleFormRef)">重置</el-button>
