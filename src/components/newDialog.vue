@@ -21,7 +21,7 @@ const openDialog = () => {
 };
 
 const closeDialog = () => {
-  console.log("close");
+  // console.log("close");
   dialogVisible.value = false;
 };
 
@@ -38,7 +38,9 @@ watch(
     <el-button @click="openDialog" :link="linkType" type="primary">{{
       title
     }}</el-button>
-    <el-dialog v-model="dialogVisible"> <slot /> </el-dialog>
+    <el-dialog v-model="dialogVisible" top="30vh">
+      <slot />
+    </el-dialog>
   </div>
 </template>
 

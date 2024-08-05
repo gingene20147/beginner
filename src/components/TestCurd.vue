@@ -11,14 +11,19 @@ type DataType = {
   email: string;
 };
 
+// 模擬抓取資料的容器
 const tableData = ref<DataType[]>([]);
+// 模擬編輯的user資料
 const tempUser = ref<DataType>();
-const closeMsg = ref(false);
+// 傳遞關閉對話框的訊息
+const closeDialogMsg = ref(false);
 
+// ID生產器
 const generateID = () => {
   return crypto.randomUUID();
 };
 
+// 模擬GET
 const getData = () => {
   const data = [
     {
@@ -45,17 +50,20 @@ const findEditUser = (id: string) => {
   tempUser.value = user;
 };
 
+// 模擬POST
 const addUser = (value: Omit<DataType, "id">): void => {
   postData({ id: generateID(), ...value });
   handleCloseDialog();
 };
 
+// 模擬PUT
 const editUser = (value: DataType) => {
   const userIndex = tableData.value.findIndex((user) => user.id === value.id);
   tableData.value[userIndex] = value;
   handleCloseDialog();
 };
 
+// 模擬DELETE
 const deleteUser = (id: string, name: string) => {
   ElMessageBox.confirm(`即將要刪除使用者${name}資料，是否繼續?`, "Warning", {
     confirmButtonText: "OK",
@@ -80,7 +88,10 @@ const deleteUser = (id: string, name: string) => {
 };
 
 const handleCloseDialog = (): void => {
-  closeMsg.value = true;
+  closeDialogMsg.value = true;
+  setTimeout(() => {
+    closeDialogMsg.value = false;
+  }, 50);
 };
 
 onMounted(() => {
@@ -95,18 +106,10 @@ onMounted(() => {
     <el-table-column prop="email" label="Email" width="180" />
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default="scope">
-        <!-- <el-button
-          link
-          type="primary"
-          size="small"
-          @click="putData(scope.row.id)"
-        >
-          編輯
-        </el-button> -->
         <div class="flex">
           <NewDialog
             title="編輯"
-            :closeMsg="closeMsg"
+            :closeMsg="closeDialogMsg"
             :linkType="true"
             :delay="true"
             @click="findEditUser(scope.row.id)"
@@ -125,7 +128,7 @@ onMounted(() => {
       </template>
     </el-table-column>
   </el-table>
-  <NewDialog title="新增使用者資料" :closeMsg="closeMsg">
+  <NewDialog title="新增使用者資料" :closeMsg="closeDialogMsg">
     <AddForm @addUser="addUser" />
   </NewDialog>
 </template>
