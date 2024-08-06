@@ -4,8 +4,9 @@ import { storeToRefs } from "pinia";
 import NewDialog from "./NewDialog.vue";
 import AddForm from "./AddForm.vue";
 import EditForm from "./EditForm.vue";
+import type { UserType } from "@/types";
 
-import { useUsersStore, useDialogStore } from "../stores";
+import { useUsersStore, useDialogStore } from "@/stores";
 
 const userStore = useUsersStore();
 const { userData, editUserData } = storeToRefs(userStore);

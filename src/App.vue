@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import BaseLayout from "./components/BaseLayout.vue";
-import TestCurd from "./components/TestCurd.vue";
+import { RouterView } from "vue-router";
 </script>
 
 <template>
-  <BaseLayout>
-    <template #main>
-      <TestCurd />
-    </template>
-  </BaseLayout>
+  <RouterView />
 </template>
 
-<style scoped></style>
+<style></style>

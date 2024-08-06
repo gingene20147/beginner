@@ -1,9 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import HeaderNav from "@/layout/HeaderNav.vue";
+</script>
 
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header>Header</el-header>
+      <el-header>
+        <HeaderNav></HeaderNav>
+      </el-header>
       <el-main>
         <slot name="main"></slot>
       </el-main>
