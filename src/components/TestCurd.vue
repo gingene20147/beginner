@@ -1,106 +1,25 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { onMounted } from "vue";
+import { storeToRefs } from "pinia";
 import NewDialog from "./NewDialog.vue";
 import AddForm from "./AddForm.vue";
 import EditForm from "./EditForm.vue";
 
-type DataType = {
-  id: string;
-  name: string;
-  email: string;
-};
+import { useUsersStore, useDialogStore } from "../stores";
 
-// 模擬抓取資料的容器
-const tableData = ref<DataType[]>([]);
-// 模擬編輯的user資料
-const tempUser = ref<DataType>();
-// 傳遞關閉對話框的訊息
-const closeDialogMsg = ref(false);
+const userStore = useUsersStore();
+const { userData, editUserData } = storeToRefs(userStore);
+const { closeDialogMsg } = storeToRefs(useDialogStore());
 
-// ID生產器
-const generateID = () => {
-  return crypto.randomUUID();
-};
-
-// 模擬GET
-const getData = () => {
-  const data = [
-    {
-      id: generateID(),
-      name: "Tom",
-      email: "Tom@example.com",
-    },
-    {
-      id: generateID(),
-      name: "Amy",
-      email: "Amy@example.com",
-    },
-  ];
-
-  tableData.value = data;
-};
-
-const postData = async (user: DataType) => {
-  tableData.value.push(user);
-};
-
-const findEditUser = (id: string) => {
-  const user = tableData.value.find((user) => user.id === id);
-  tempUser.value = user;
-};
-
-// 模擬POST
-const addUser = (value: Omit<DataType, "id">): void => {
-  postData({ id: generateID(), ...value });
-  handleCloseDialog();
-};
-
-// 模擬PUT
-const editUser = (value: DataType) => {
-  const userIndex = tableData.value.findIndex((user) => user.id === value.id);
-  tableData.value[userIndex] = value;
-  handleCloseDialog();
-};
-
-// 模擬DELETE
-const deleteUser = (id: string, name: string) => {
-  ElMessageBox.confirm(`即將要刪除使用者${name}資料，是否繼續?`, "Warning", {
-    confirmButtonText: "OK",
-    cancelButtonText: "Cancel",
-    type: "warning",
-  })
-    .then(() => {
-      const userIndex = tableData.value.findIndex((user) => user.id === id);
-      tableData.value.splice(userIndex, 1);
-
-      ElMessage({
-        type: "success",
-        message: "刪除成功",
-      });
-    })
-    .catch(() => {
-      ElMessage({
-        type: "info",
-        message: "取消刪除",
-      });
-    });
-};
-
-const handleCloseDialog = (): void => {
-  closeDialogMsg.value = true;
-  setTimeout(() => {
-    closeDialogMsg.value = false;
-  }, 50);
-};
+const { getUserData, addUser, deleteUser, findEditUser, editUser } = userStore;
 
 onMounted(() => {
-  getData();
+  getUserData();
 });
 </script>
 
 <template>
-  <el-table :data="tableData" style="width: 100%" class="mb-4">
+  <el-table :data="userData" style="width: 100%" class="mb-4">
     <el-table-column prop="id" label="ID" width="150" />
     <el-table-column prop="name" label="Name" width="120" />
     <el-table-column prop="email" label="Email" width="180" />
@@ -114,7 +33,7 @@ onMounted(() => {
             :delay="true"
             @click="findEditUser(scope.row.id)"
           >
-            <EditForm :user="tempUser" @editUser="editUser" />
+            <EditForm :user="editUserData" @editUser="editUser" />
           </NewDialog>
 
           <el-button

@@ -16,12 +16,12 @@ const openDialog = () => {
   } else {
     setTimeout(() => {
       dialogVisible.value = true;
-    }, 100);
+    }, 0);
   }
 };
 
 const closeDialog = () => {
-  // console.log("close");
+  console.log("close");
   dialogVisible.value = false;
 };
 

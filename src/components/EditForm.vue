@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
+import { ElFormItem } from "element-plus";
 
 type RuleForm = {
   name: string;
@@ -49,11 +50,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   });
 };
-
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
-};
 </script>
 
 <template>
@@ -77,8 +73,6 @@ const resetForm = (formEl: FormInstance | undefined) => {
       <el-button type="primary" @click="submitForm(ruleFormRef)">
         修改
       </el-button>
-
-      <el-button @click="resetForm(ruleFormRef)">重置</el-button>
     </el-form-item>
   </el-form>
 </template>
