@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// 名稱更動
 import { ref, watch } from "vue";
 
 const props = defineProps<{
