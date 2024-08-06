@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { reactive, ref, computed } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { ElFormItem } from "element-plus";
 
@@ -50,6 +50,12 @@ const submitForm = (formEl: FormInstance | undefined) => {
     }
   });
 };
+
+const disableSubmit = computed(() => {
+  return (
+    props.user.name !== ruleForm.name || props.user.email !== ruleForm.email
+  );
+});
 </script>
 
 <template>
@@ -70,7 +76,11 @@ const submitForm = (formEl: FormInstance | undefined) => {
     </el-form-item>
 
     <el-form-item>
-      <el-button type="primary" @click="submitForm(ruleFormRef)">
+      <el-button
+        type="primary"
+        @click="submitForm(ruleFormRef)"
+        :disabled="!disableSubmit"
+      >
         修改
       </el-button>
     </el-form-item>
