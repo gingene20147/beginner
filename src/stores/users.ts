@@ -1,11 +1,14 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { useDialogStore } from "./dialog";
-import { ElMessageBox, ElMessage } from "element-plus";
+import { useDialogStore, useMessageStore } from "./";
+import { ElMessageBox } from "element-plus";
 import type { UserType } from "../types";
 
 export const useUsersStore = defineStore("users", () => {
-  const { handleCloseDialog } = useDialogStore();
+  // 開關對話框
+  const { handleOpenDialog, handleCloseDialog } = useDialogStore();
+  // 頂部訊息
+  const { sendTopMessage } = useMessageStore();
   // ID生產器
   const generateID = () => crypto.randomUUID();
 
@@ -50,8 +53,11 @@ export const useUsersStore = defineStore("users", () => {
   const postData = (user: UserType) => {
     userData.value.push(user);
   };
+
+  // 元件外部接收新增使用者資料
   const addUser = (value: Omit<UserType, "id">): void => {
     postData({ id: generateID(), ...value });
+    sendTopMessage("success", "新增成功");
     handleCloseDialog();
   };
 
@@ -61,33 +67,38 @@ export const useUsersStore = defineStore("users", () => {
     editUserData.value = user;
   };
 
+  // 元件外部接收編輯使用者資料
   const editUser = (value: UserType) => {
     const userIndex = userData.value.findIndex((user) => user.id === value.id);
     userData.value[userIndex] = value;
+    sendTopMessage("success", "修改成功");
     handleCloseDialog();
+  };
+
+  // 點擊根據id找尋user並開啟對話框
+  const handleEditUser = (id: string) => {
+    findEditUser(id);
+    handleOpenDialog();
   };
 
   // 模擬DELETE
   const deleteUser = (id: string, name: string) => {
-    ElMessageBox.confirm(`即將要刪除使用者${name}資料，是否繼續?`, "Warning", {
-      confirmButtonText: "OK",
-      cancelButtonText: "Cancel",
-      type: "warning",
-    })
+    ElMessageBox.confirm(
+      `即將要刪除使用者${name}資料，是否繼續?`,
+      "您正要嘗試刪除一位使用者",
+      {
+        confirmButtonText: "刪除",
+        cancelButtonText: "取消",
+        type: "warning",
+      }
+    )
       .then(() => {
         const userIndex = userData.value.findIndex((user) => user.id === id);
         userData.value.splice(userIndex, 1);
-
-        ElMessage({
-          type: "success",
-          message: "刪除成功",
-        });
+        sendTopMessage("success", "刪除成功");
       })
       .catch(() => {
-        ElMessage({
-          type: "info",
-          message: "取消刪除",
-        });
+        sendTopMessage("info", "取消刪除");
       });
   };
 
@@ -96,8 +107,8 @@ export const useUsersStore = defineStore("users", () => {
     editUserData,
     getUserData,
     addUser,
-    findEditUser,
     editUser,
+    handleEditUser,
     deleteUser,
   };
 });

@@ -9,9 +9,10 @@ import { useUsersStore, useDialogStore } from "../stores";
 
 const userStore = useUsersStore();
 const { userData, editUserData } = storeToRefs(userStore);
-const { closeDialogMsg } = storeToRefs(useDialogStore());
+const { openDialogMsg, closeDialogMsg } = storeToRefs(useDialogStore());
 
-const { getUserData, addUser, deleteUser, findEditUser, editUser } = userStore;
+const { getUserData, addUser, deleteUser, editUser, handleEditUser } =
+  userStore;
 
 onMounted(() => {
   getUserData();
@@ -26,15 +27,13 @@ onMounted(() => {
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default="scope">
         <div class="flex">
-          <NewDialog
-            title="編輯"
-            :closeMsg="closeDialogMsg"
-            :linkType="true"
-            :delay="true"
-            @click="findEditUser(scope.row.id)"
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="handleEditUser(scope.row.id)"
+            >編輯</el-button
           >
-            <EditForm :user="editUserData" @editUser="editUser" />
-          </NewDialog>
 
           <el-button
             link
@@ -49,6 +48,15 @@ onMounted(() => {
   </el-table>
   <NewDialog title="新增使用者資料" :closeMsg="closeDialogMsg">
     <AddForm @addUser="addUser" />
+  </NewDialog>
+  <NewDialog
+    title="編輯"
+    :openMsg="openDialogMsg"
+    :closeMsg="closeDialogMsg"
+    :hideButton="true"
+    :delay="true"
+  >
+    <EditForm :user="editUserData" @editUser="editUser" />
   </NewDialog>
 </template>
 

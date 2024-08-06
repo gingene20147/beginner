@@ -3,42 +3,51 @@ import { ref, watch } from "vue";
 
 const props = defineProps<{
   title: string;
+  openMsg?: boolean;
   closeMsg: boolean;
-  linkType?: boolean;
+  hideButton?: boolean;
   delay?: boolean;
 }>();
 
 const dialogVisible = ref(false);
 
 const openDialog = () => {
-  if (!props.delay) {
-    dialogVisible.value = true;
-  } else {
-    setTimeout(() => {
-      dialogVisible.value = true;
-    }, 0);
-  }
+  dialogVisible.value = true;
 };
 
 const closeDialog = () => {
-  console.log("close");
+  // console.log("close");
   dialogVisible.value = false;
 };
 
+// 配合外部button的時候使用
+watch(
+  () => props.openMsg,
+  () => {
+    if (props.openMsg) {
+      openDialog();
+    }
+  }
+);
+
+// 當外部傳遞關閉訊號時觸發
 watch(
   () => props.closeMsg,
   () => {
-    closeDialog();
+    if (props.closeMsg) {
+      closeDialog();
+    }
   }
 );
 </script>
 
 <template>
   <div>
-    <el-button @click="openDialog" :link="linkType" type="primary">{{
+    <el-button v-if="!hideButton" @click="openDialog" type="primary">{{
       title
     }}</el-button>
-    <el-dialog v-model="dialogVisible" top="30vh">
+    <!-- destroy-on-close 屬性確保每次都是新的內容 -->
+    <el-dialog v-model="dialogVisible" :title="title" destroy-on-close>
       <slot />
     </el-dialog>
   </div>
