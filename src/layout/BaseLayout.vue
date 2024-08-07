@@ -8,6 +8,9 @@ import HeaderNav from "@/layout/HeaderNav.vue";
       <el-header>
         <HeaderNav></HeaderNav>
       </el-header>
+
+      <slot name="title"></slot>
+
       <el-main>
         <slot name="main"></slot>
       </el-main>
