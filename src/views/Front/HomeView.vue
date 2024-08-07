@@ -4,7 +4,7 @@ import BaseLayout from "@/layout/BaseLayout.vue";
 
 <template>
   <BaseLayout>
-    <template #main> 封面 </template>
+    <template #main> 首頁 </template>
   </BaseLayout>
 </template>
 

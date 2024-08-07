@@ -11,6 +11,7 @@ import HeaderNav from "@/layout/HeaderNav.vue";
       <el-main>
         <slot name="main"></slot>
       </el-main>
+      <slot></slot>
       <el-footer>Footer</el-footer>
     </el-container>
   </div>

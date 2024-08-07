@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import BaseLayout from "@/layout/BaseLayout.vue";
-import TestCurd from "@/views/UserView/TestCurd.vue";
 </script>
 
 <template>
   <BaseLayout>
-    <template #main>
-      <TestCurd />
-    </template>
+    <template #main> 產品頁面 </template>
   </BaseLayout>
 </template>
+
+<style scoped></style>

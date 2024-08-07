@@ -5,17 +5,43 @@ import type { FormInstance, FormRules } from "element-plus";
 type RuleForm = {
   name: string;
   email: string;
+  city: "台北市" | "台中市" | "高雄市";
 };
 
 const emit = defineEmits<{
-  (e: "AddUser", value: { name: string; email: string }): void;
+  (e: "AddUser", value: { name: string; email: string; city: string }): void;
 }>();
+
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+const cities = [
+  {
+    value: "台北市",
+    label: "台北市",
+  },
+  {
+    value: "台中市",
+    label: "台中市",
+  },
+  {
+    value: "高雄市",
+    label: "高雄市",
+  },
+];
 
 const ruleFormRef = ref<FormInstance>();
 
 const ruleForm = reactive({
   name: "",
   email: "",
+  date: formatDate(new Date()),
+  city: "",
 });
 
 const rules = reactive<FormRules<RuleForm>>({
@@ -31,6 +57,7 @@ const rules = reactive<FormRules<RuleForm>>({
       trigger: ["blur", "change"],
     },
   ],
+  city: [{ required: true, message: "請選擇城市", trigger: "change" }],
 });
 
 const submitForm = (formEl: FormInstance | undefined) => {
@@ -67,6 +94,20 @@ const resetForm = (formEl: FormInstance | undefined) => {
     </el-form-item>
     <el-form-item label="Email" prop="email">
       <el-input v-model="ruleForm.email" type="email" autocomplete="off" />
+    </el-form-item>
+    <el-form-item label="居住地" prop="city">
+      <el-select
+        v-model="ruleForm.city"
+        placeholder="請選擇居住地"
+        autocomplete="off"
+      >
+        <el-option
+          v-for="item in cities"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </el-form-item>
 
     <el-form-item>

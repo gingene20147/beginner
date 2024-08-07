@@ -6,19 +6,46 @@ import { ElFormItem } from "element-plus";
 type RuleForm = {
   name: string;
   email: string;
+  city: string;
 };
 
 type User = {
   id: string;
   name: string;
   email: string;
+  date: string;
+  city: "台北市" | "台中市" | "高雄市";
 };
 
 const props = defineProps<{ user: User }>();
 
 const emit = defineEmits<{
-  (e: "editUser", value: { id: string; name: string; email: string }): void;
+  (
+    e: "editUser",
+    value: {
+      id: string;
+      name: string;
+      email: string;
+      date: string;
+      city: "台北市" | "台中市" | "高雄市";
+    }
+  ): void;
 }>();
+
+const cities = [
+  {
+    value: "台北市",
+    label: "台北市",
+  },
+  {
+    value: "台中市",
+    label: "台中市",
+  },
+  {
+    value: "高雄市",
+    label: "高雄市",
+  },
+];
 
 const ruleFormRef = ref<FormInstance>();
 
@@ -37,6 +64,7 @@ const rules = reactive<FormRules<RuleForm>>({
       trigger: ["blur", "change"],
     },
   ],
+  city: [{ required: true, message: "請選擇城市", trigger: "change" }],
 });
 
 const submitForm = (formEl: FormInstance | undefined) => {
@@ -53,7 +81,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
 const disableSubmit = computed(() => {
   return (
-    props.user.name !== ruleForm.name || props.user.email !== ruleForm.email
+    props.user.name !== ruleForm.name ||
+    props.user.email !== ruleForm.email ||
+    props.user.city !== ruleForm.city
   );
 });
 </script>
@@ -73,6 +103,20 @@ const disableSubmit = computed(() => {
     </el-form-item>
     <el-form-item label="Email" prop="email">
       <el-input v-model="ruleForm.email" type="email" autocomplete="off" />
+    </el-form-item>
+    <el-form-item label="居住地" prop="city">
+      <el-select
+        v-model="ruleForm.city"
+        placeholder="請選擇居住地"
+        autocomplete="off"
+      >
+        <el-option
+          v-for="item in cities"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </el-form-item>
 
     <el-form-item>

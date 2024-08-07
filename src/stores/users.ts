@@ -6,41 +6,96 @@ import type { UserType } from "../types";
 interface State {
   userData: UserType[];
   editUserData: UserType | null;
+  selectCity: "" | "台北市" | "台中市" | "高雄市" | "all";
 }
 
 export const useUsersStore = defineStore("users", {
   state: (): State => ({
     userData: [],
     editUserData: null,
+    selectCity: "",
   }),
   actions: {
     generateID() {
       return crypto.randomUUID();
     },
-    mockdData(status = 200): Promise<UserType[]> {
-      const data = [
+    mockData(): UserType[] {
+      return [
         {
-          id: this.generateID(),
-          name: "Tom",
-          email: "Tom@example.com",
+          id: "1",
+          date: "2023-01-10",
+          name: "Alice",
+          city: "台北市",
+          email: "Alice@example.com",
         },
         {
-          id: this.generateID(),
-          name: "Amy",
-          email: "Amy@example.com",
+          id: "2",
+          date: "2023-02-14",
+          name: "Bob",
+          city: "台中市",
+          email: "Bob@example.com",
+        },
+        {
+          id: "3",
+          date: "2023-03-20",
+          name: "Charlie",
+          city: "高雄市",
+          email: "Charlie@example.com",
+        },
+        {
+          id: "4",
+          date: "2023-04-05",
+          name: "David",
+          city: "台北市",
+          email: "David@example.com",
+        },
+        {
+          id: "5",
+          date: "2023-05-15",
+          name: "Eva",
+          city: "台中市",
+          email: "Eva@example.com",
+        },
+        {
+          id: "6",
+          date: "2023-06-25",
+          name: "Frank",
+          city: "高雄市",
+          email: "Frank@example.com",
+        },
+        {
+          id: "7",
+          date: "2023-07-30",
+          name: "Grace",
+          city: "台北市",
+          email: "Grace@example.com",
+        },
+        {
+          id: "8",
+          date: "2023-08-12",
+          name: "Hank",
+          city: "台中市",
+          email: "Hank@example.com",
+        },
+        {
+          id: "9",
+          date: "2023-09-18",
+          name: "Ivy",
+          city: "高雄市",
+          email: "Ivy@example.com",
+        },
+        {
+          id: "10",
+          date: "2023-10-22",
+          name: "Jack",
+          city: "台北市",
+          email: "Jack@example.com",
         },
       ];
-      return new Promise((resolve, reject) => {
-        if (status === 200) {
-          resolve(data);
-        } else {
-          reject("errors");
-        }
-      });
     },
     // 模擬GET
     async getUserData() {
-      const res = await this.mockdData();
+      const res = this.mockData();
       this.userData = res;
     },
     // 模擬POST
@@ -89,6 +144,15 @@ export const useUsersStore = defineStore("users", {
         .catch(() => {
           useMessageStore().sendTopMessage("info", "取消刪除");
         });
+    },
+  },
+  getters: {
+    filterUser: (state) => {
+      if (state.selectCity === "" || state.selectCity === "all") {
+        return state.userData;
+      } else {
+        return state.userData.filter((user) => user.city === state.selectCity);
+      }
     },
   },
 });
