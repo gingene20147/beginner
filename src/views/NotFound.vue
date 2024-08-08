@@ -2,7 +2,6 @@
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-console.log(router);
 
 const goBack = () => {
   router.back();
