@@ -3,5 +3,7 @@ export type UserType = {
   date: string;
   name: string;
   email: string;
-  city: "台北市" | "台中市" | "高雄市";
+  city: UserCity;
 };
+
+export type UserCity = "台北市" | "台中市" | "高雄市";

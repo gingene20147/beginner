@@ -6,4 +6,15 @@ import { RouterView } from "vue-router";
   <RouterView />
 </template>
 
-<style></style>
+<style>
+.title {
+  padding: 20px;
+}
+.flex {
+  display: flex;
+}
+.justify-between {
+  display: flex;
+  justify-content: space-between;
+}
+</style>
