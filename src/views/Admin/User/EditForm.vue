@@ -2,6 +2,7 @@
 import { reactive, ref, computed } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
 import { ElFormItem } from "element-plus";
+import type { UserType, UserCity } from "@/types";
 
 type RuleForm = {
   name: string;
@@ -9,15 +10,7 @@ type RuleForm = {
   city: string;
 };
 
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  date: string;
-  city: "台北市" | "台中市" | "高雄市";
-};
-
-const props = defineProps<{ user: User }>();
+const props = defineProps<{ user: UserType }>();
 
 const emit = defineEmits<{
   (
@@ -27,7 +20,7 @@ const emit = defineEmits<{
       name: string;
       email: string;
       date: string;
-      city: "台北市" | "台中市" | "高雄市";
+      city: UserCity;
     }
   ): void;
 }>();

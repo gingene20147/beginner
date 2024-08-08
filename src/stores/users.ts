@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { useDialogStore, useMessageStore } from "./";
 import { ElMessageBox } from "element-plus";
-import type { UserType } from "../types";
+import type { UserType, UserCity } from "../types";
 
 interface State {
   userData: UserType[];
   editUserData: UserType | null;
-  selectCity: "" | "台北市" | "台中市" | "高雄市" | "all";
+  selectCity: UserCity | "" | "all";
 }
 
 export const useUsersStore = defineStore("users", {
