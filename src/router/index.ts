@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useLoginStore } from "@/stores";
 // import FrontView from "../views/Front/FrontView.vue";
 const routes = [
   {
@@ -45,6 +46,24 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const user = JSON.parse(
+    localStorage.getItem(import.meta.env.VITE_TOKEN_KEY) as any
+  );
+  if (!user) {
+    next();
+  } else {
+    useLoginStore().checkLogin(user);
+    next();
+  }
+
+  // if (to.name === "admin" && !localStorage.getItem("accessToken")) {
+  //   next({ name: "login" });
+  // } else {
+  //   next();
+  // }
 });
 
 export default router;
